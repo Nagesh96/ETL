@@ -1,53 +1,45 @@
-files pathos.path.join(os.getcwd(), "WTS_Trade_Data*.txt')
-
-logging.info('WTS 100 get data method files path is_step_2 + str(files_path)) files sorted(glob.iglob(files_path), key-os.path.getctime, reverse=True)
-
-logging.info('WTS 100-get data method files is step_3:'+ str(files))
-
 except Exception as e:
-
-logging.info("Security Detail exception is: '+str(e)) logging.exception('Exception on downloading Security Detail files')
 
 self.batch_log_error(str(e))
 
-if self.error status False:
+logging.exception('Exception on cleaning WCM file')
+
+else:
+
+return
+
+def insert data(self, wts):
 
 try:
 
-foundFileList = []
+logging.info("Started WTS 100 insert process')
 
-for file in files:
+engine create_engine('mssql+pyodbc:///?odbc_connect-%s' % self.params, fast_executemany=True)
 
-if file.find(datetime.datetime.today().strftime('%Y-%m'),0,len(file)) > 0:
+connection = engine.raw_connection()
 
-#its the current month
+cursor connection.cursor()
 
-foundFileList.append(file)
+cursor.execute("IF OBJECT_ID('tempdb..##wts') IS NOT NULL DROP TABLE ##wts")
 
-for file in foundFileList[0:2]:
+cursor.commit()
 
-wts pd.read_csv(file, sep-'\t', lineterminator-'\r', encoding "ISO-8859-1", error bad_lines=False) #wts pd.read_csv(file, sep='\t', lineterminator='\r', encoding "ISO-8859-1", on_bad_lines-'skip')
+table_name = '##wts"
 
-if 'PSET' not in wts.columns.tolist():
+wts.to sql(table name, engine, if_exists 'replace', chunksize = True)
 
-wts['PSET'] =
+connection engine.raw_connection()
 
-wts['CLS'] =
+cursor connection.cursor()
 
-wts['Settlement Currency] =
+cursor.execute("{CALL [daeproc].[dae_loobi_insert_wts_trades].]")
 
-wts['Trade Currency'] =
+cursor.commit()
 
-if 'Completed/Cancelled in wts.columns.tolist(): wts['Completed/Cancelled Date'] wts['Completed/Cancelled"]
-
-try:
-
-del wts['Completed/Cancelled']
-
-wts formatWTSFile(self, wts)
-
-print('cleaned up file)
+connection.close()
 
 except Exception as e:
 
-writeException(str(e), 'Error on formatting WTS file')
+self.batch_log_error(str(e))
+
+logging.exception("Exception occurred on WTS 100 insert process')
