@@ -1,59 +1,53 @@
-'Block Force Match', 'Allocation Force Match', 'PSAFE Validation', 'Failed Block Validation',
+files pathos.path.join(os.getcwd(), "WTS_Trade_Data*.txt')
 
-'Failed Allocation Validation', 'Type', 'Affirmation']] = wts[['Match Sent', 'Match Received', 'Amender', 'Authorizer', 'ReasonCode'
+logging.info('WTS 100 get data method files path is_step_2 + str(files_path)) files sorted(glob.iglob(files_path), key-os.path.getctime, reverse=True)
 
-'SpecificReason', 'Market', 'Investment Strategy',
-
-'Desk Location', 'Sell CCY', 'Buy CCY', 'STP', 'Non-STP',
-
-"Late Trade', 'On Time Trade', 'Matched on T',
-
-'Matched on T +1', 'Matched on T+2_Greater', 'Market Region',
-
-'Account Region Owner', 'Trade Region Owner', 'FX Region Owner',
-
-'Holding Rule ID', 'Holding Rule Description', 'OSP External Value', 'PSET',
-
-'CLS', 'Settlement Currency', 'Trade Currency', 'Trade Touched by 100 FX',
-
-' Trade Reinstruct Operator', 'SSIs Reattach Operator',
-
-4
-
-+
-
-'Block Ref', 'Settlement Amount', 'SEDOL', 'ISIN', 'Broker Interface Operator',
-
-'Entered Status Operator', 'Asset Related Status Operator', 'FX Agent/CompleteFX Destination',
-
-'Block Mismatch', 'Allocation Mismatch', 'Block Match', 'Allocation Match', 'Match Status',
-
-I
-
-'Block Force Match', 'Allocation Force Match', 'PSAFE Validation', 'Failed Block Validation', '
-
-Failed Allocation Validation', 'Type', 'Affirmation']].replace(np.nan, regex=True) wts wts.astype(str)
-
-wts['Match Received Date'] = pd.to_datetime(wts['Match Received']) wts wts.sort_values (by=['Trade ID', 'Match Received Date'])
-
-wts
-
-wts.drop_duplicates (subset='Trade ID', keep='first')
-
-del wts['Match Received Date'] wts=wts.loc[wts['Trade ID'] !='nan']
-
-wts['Trade Touched by 100 FX Mod'] = wts['Trade Touched by 100 FX].apply(lambda x: 'Y' if x=='Yes' else ('N' if x=='No' else x ))
-
-wts['Trade Touched by 100 FX'] = wts['Trade Touched by 100 FX Mod']
-
-del wts['Trade Touched by 100 FX Mod']
-
-wts['Company']= wts['Company'].replace(r'\n','', regex=True) wts['Settlement Amount']= wts['Settlement Amount'].replace(r',
-
-,regex=True)
-
-return wts
+logging.info('WTS 100-get data method files is step_3:'+ str(files))
 
 except Exception as e:
 
-print("ERROR: ",e)
+logging.info("Security Detail exception is: '+str(e)) logging.exception('Exception on downloading Security Detail files')
+
+self.batch_log_error(str(e))
+
+if self.error status False:
+
+try:
+
+foundFileList = []
+
+for file in files:
+
+if file.find(datetime.datetime.today().strftime('%Y-%m'),0,len(file)) > 0:
+
+#its the current month
+
+foundFileList.append(file)
+
+for file in foundFileList[0:2]:
+
+wts pd.read_csv(file, sep-'\t', lineterminator-'\r', encoding "ISO-8859-1", error bad_lines=False) #wts pd.read_csv(file, sep='\t', lineterminator='\r', encoding "ISO-8859-1", on_bad_lines-'skip')
+
+if 'PSET' not in wts.columns.tolist():
+
+wts['PSET'] =
+
+wts['CLS'] =
+
+wts['Settlement Currency] =
+
+wts['Trade Currency'] =
+
+if 'Completed/Cancelled in wts.columns.tolist(): wts['Completed/Cancelled Date'] wts['Completed/Cancelled"]
+
+try:
+
+del wts['Completed/Cancelled']
+
+wts formatWTSFile(self, wts)
+
+print('cleaned up file)
+
+except Exception as e:
+
+writeException(str(e), 'Error on formatting WTS file')
