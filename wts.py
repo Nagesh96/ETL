@@ -1,45 +1,64 @@
-except Exception as e:
+def delete files(self):
 
-self.batch_log_error(str(e))
+Deletes files after completing the process
 
-logging.exception('Exception on cleaning WCM file')
+Args:
 
-else:
+none
 
-return
+Returns:
 
-def insert data(self, wts):
+none
+
+Raises:
 
 try:
 
-logging.info("Started WTS 100 insert process')
+Exception on pulling files or deleting files
 
-engine create_engine('mssql+pyodbc:///?odbc_connect-%s' % self.params, fast_executemany=True)
+files pathos.path.join(os.getcwd(), '*WTS Trade_Data".txt')
 
-connection = engine.raw_connection()
+#logging.info('WTS 100 came to delete files method files path: '+str(files_path))
 
-cursor connection.cursor()
+files sorted(
 
-cursor.execute("IF OBJECT_ID('tempdb..##wts') IS NOT NULL DROP TABLE ##wts")
+glob.iglob(files_path), key os.path.getctime, reverse-True)
 
-cursor.commit()
-
-table_name = '##wts"
-
-wts.to sql(table name, engine, if_exists 'replace', chunksize = True)
-
-connection engine.raw_connection()
-
-cursor connection.cursor()
-
-cursor.execute("{CALL [daeproc].[dae_loobi_insert_wts_trades].]")
-
-cursor.commit()
-
-connection.close()
+logging.info('WTS 100 came to delete files method files str(files))
 
 except Exception as e:
 
-self.batch_log_error(str(e))
+try:
 
-logging.exception("Exception occurred on WTS 100 insert process')
+logging.info('Exception error is + str(e))
+
+logging.info("Exception occurred on pulling WTS 100 files for deletion')
+
+for f in files:
+
+os.remove(f)
+
+#logging.info('WTS 100 came to delete files files try ended: ')
+
+except Exception as e:
+
+logging.info("Exception error is: '+ str(e))
+
+logging.info("Exception occurred on deleting files')
+
+logging.info('Successfully deleted files')
+
+return
+
+def main(self):
+
+self.delete_files()
+
+wts_data self.get_data()
+
+self.insert data(wts_data) if self.error status = False:
+
+self.batch_log success()
+
+self.delete_files()
+return
