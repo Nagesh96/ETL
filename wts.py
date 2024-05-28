@@ -1,49 +1,37 @@
-import pandas as pd
+try:
 
-import time
+connection engine.raw_connection()
 
-import logging
+cursor = connection.cursor()
 
-import re
+cursor.execute(exec_string)
 
-import datetime
+cursor.commit()
 
-from datetime import timedelta
+connection.close()
 
-from sqlalchemy import create_engine
+except Exception as e:
 
-import glob, os
+logging.exception('Exception on batch log success update')
 
-import ftplib
+I
 
-logging.info('Starting WTS job')
+return
 
-class WTSInsert:
-
-def __init__(self, batch_id, params):
-
-self.batch_id = batch_id
-
-self.params = params
-
-logging.getLogger().setLevel(logging.INFO)
-
-self.error_status = False
-
-def batch_log_success(self):
+def batch_log_error(self, error_summary):
 
 engine = create_engine('mssql+pyodbc:///?odbc_connect=%s' % self.params, fast_executemany=True)
 
-batch_id= str(self.batch_id)
+batch_id= str(self.batch_id) True
 
-exec_string =
+self.error_status
+
+exec_string = """
 
 DECLARE @curDate datetime2(7)
 
 SET @curDate CURRENT_TIMESTAMP
 
-+ batch_id +
+UPDATE [daedbo].[dae_fabi_batch_log] set s_batch_end_date @curDate where i_batch_id = ? UPDATE [daedbo].[dae_fabi_batch_log] set t_batch_status = 'ERROR' where i_batch_id = ?
 
-UPDATE [daedbo].[dae_fabi_batch_log] set s_batch_end_date = @curDate where i_batch_id = UPDATE [daedbo].[dae_fabi_batch_log] set t_batch_status = 'SUCCESS' where i_batch_id =
-
-+ batch_id
+UPDATE [daedbo].[dae_fabi_batch_log] set t_batch_error_msg? where i_batch_id = ?
