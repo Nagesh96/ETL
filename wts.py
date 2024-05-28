@@ -4,7 +4,7 @@ connection engine.raw_connection()
 
 cursor = connection.cursor()
 
-cursor.execute(exec_string)
+cursor.execute(exec_string, (batch_id, batch_id, error_summary, batch_id))
 
 cursor.commit()
 
@@ -12,26 +12,32 @@ connection.close()
 
 except Exception as e:
 
-logging.exception('Exception on batch log success update')
-
-I
+logging.exception('Exception on batch log error update')
 
 return
 
-def batch_log_error(self, error_summary):
+def formatWTSFile(self, wts):
 
-engine = create_engine('mssql+pyodbc:///?odbc_connect=%s' % self.params, fast_executemany=True)
+try:
 
-batch_id= str(self.batch_id) True
+wts [['Match Sent', 'Match Received', 'Amender', 'Authorizer', 'ReasonCode',
 
-self.error_status
+'SpecificReason', 'Market', 'Investment Strategy',
 
-exec_string = """
+'Desk Location', 'Sell CCY', 'Buy CCY', 'STP', 'Non-STP',
 
-DECLARE @curDate datetime2(7)
+Late Trade', 'On Time Trade', 'Matched on T'
 
-SET @curDate CURRENT_TIMESTAMP
+'Matched on T +1', 'Matched on T+2_Greater', 'Market Region', 'Account Region Owner', 'Trade Region Owner', 'FX Region Owner',
 
-UPDATE [daedbo].[dae_fabi_batch_log] set s_batch_end_date @curDate where i_batch_id = ? UPDATE [daedbo].[dae_fabi_batch_log] set t_batch_status = 'ERROR' where i_batch_id = ?
+'Holding Rule ID', 'Holding Rule Description', 'OSP External Value', 'PSET',
 
-UPDATE [daedbo].[dae_fabi_batch_log] set t_batch_error_msg? where i_batch_id = ?
+CLS', 'Settlement Currency', 'Trade Currency', 'Trade Touched by 100 FX', ' 'Block Ref', 'Settlement Amount', 'SEDOL', 'ISIN', 'Broker Interface Operator',
+
+'Trade Reinstruct Operator', 'SSIs Reattach Operator',
+
+'Entered Status Operator', 'Asset Related Status Operator', 'FX Agent/CompleteFX Destination',
+
+'Block Mismatch', 'Allocation Mismatch', 'Block Match', 'Allocation Match', 'Match Status', 'Block Force Match', 'Allocation Force Match', 'PSAFE Validation', 'Failed Block Validation',
+
+'Failed Allocation Validation', 'Type', 'Affirmation']] = wts [['Match Sent', 'Match Received', 'Amender',
