@@ -139,91 +139,95 @@ class WTSInsert:
                 logging.info(f'Downloaded: {filename}')
 
             f.quit()
-files_path = os.path.join(os.getcwd(), '*WTS_Trade_Data*.txt')
-logging.info('WTS 100 get data method files path is_step_2: ' + str(files_path))
-files = sorted(glob.iglob(files_path), key=os.path.getctime, reverse=True)
-logging.info('WTS 100-get data method files is step_3: ' + str(files))
+            files_path = os.path.join(os.getcwd(), '*WTS_Trade_Data*.txt')
+            logging.info('WTS 100 get data method files path is_step_2: ' + str(files_path))
+            files = sorted(glob.iglob(files_path), key=os.path.getctime, reverse=True)
+            logging.info('WTS 100-get data method files is step_3: ' + str(files))
+        except Exception as e:
+            logging.info('WTS IOO exception is: '+str(e)) 
+            logging.exception('Exception on downloading Security Detail files')
+            self.batch_log_error(str(e))
 
-if self.error_status == False:
-    try:
-        foundFileList = []
-        for file in files:
-            if file.find(datetime.datetime.today().strftime('%Y-%m'), 0, len(file)) > 0:
-                # It's the current month
-                foundFileList.append(file)
-
-        for file in foundFileList[0:2]:
-            wts = pd.read_csv(file, sep='\t', lineterminator='\r', encoding="ISO-8859-1", error_bad_lines=False)
-            if 'PSET' not in wts.columns.tolist():
-                wts['PSET'] = ''
-                wts['CLS'] = ''
-                wts['Settlement Currency'] = ''
-                wts['Trade Currency'] = ''
-            if 'Completed/Cancelled' in wts.columns.tolist():
-                wts['Completed/Cancelled Date'] = wts['Completed/Cancelled']
-                del wts['Completed/Cancelled']
+        if self.error_status == False:
             try:
-                wts = self.formatWTSFile(wts)
-                print('cleaned up file')
+                foundFileList = []
+                for file in files:
+                    if file.find(datetime.datetime.today().strftime('%Y-%m'), 0, len(file)) > 0:
+                        # It's the current month
+                        foundFileList.append(file)
+
+                for file in foundFileList[0:2]:
+                    wts = pd.read_csv(file, sep='\t', lineterminator='\r', encoding="ISO-8859-1", error_bad_lines=False)
+                    if 'PSET' not in wts.columns.tolist():
+                        wts['PSET'] = ''
+                        wts['CLS'] = ''
+                        wts['Settlement Currency'] = ''
+                        wts['Trade Currency'] = ''
+                    if 'Completed/Cancelled' in wts.columns.tolist():
+                        wts['Completed/Cancelled Date'] = wts['Completed/Cancelled']
+                        del wts['Completed/Cancelled']
+                    try:
+                        wts = self.formatWTSFile(wts)
+                        print('cleaned up file')
+                    except Exception as e:
+                        logging.info('WTS IOO exception is: ' + str(e))
             except Exception as e:
-                logging.info('WTS IOO exception is: ' + str(e))
-    except Exception as e:
-        self.batch_log_error(str(e))
-        logging.exception('Exception on cleaning WCM file')
-else:
-    return
+                self.batch_log_error(str(e))
+                logging.exception('Exception on cleaning WCM file')
+        else:
+            return
 
-def insert_data(self, wts):
-    try:
-        logging.info('Started WTS 100 insert process')
-        engine = create_engine('mssql+pyodbc:///?odbc_connect=%s' % self.params, fast_executemany=True)
-        connection = engine.raw_connection()
-        cursor = connection.cursor()
-        cursor.execute("IF OBJECT_ID('tempdb..##wts') IS NOT NULL DROP TABLE ##wts")
-        cursor.commit()
-        table_name = '##wts'
-        wts.to_sql(table_name, engine, if_exists='replace', chunksize=True)
-        connection = engine.raw_connection()
-        cursor = connection.cursor()
-        cursor.execute("{CALL [daeproc].[dae_loobi_insert_wts_trades]()}")
-        cursor.commit()
-        connection.close()
-    except Exception as e:
-        self.batch_log_error(str(e))
-        logging.exception('Exception occurred on WTS 100 insert process')
+    def insert_data(self, wts):
+        try:
+            logging.info('Started WTS 100 insert process')
+            engine = create_engine('mssql+pyodbc:///?odbc_connect=%s' % self.params, fast_executemany=True)
+            connection = engine.raw_connection()
+            cursor = connection.cursor()
+            cursor.execute("IF OBJECT_ID('tempdb..##wts') IS NOT NULL DROP TABLE ##wts")
+            cursor.commit()
+            table_name = '##wts'
+            wts.to_sql(table_name, engine, if_exists='replace', chunksize=True)
+            connection = engine.raw_connection()
+            cursor = connection.cursor()
+            cursor.execute("{CALL [daeproc].[dae_loobi_insert_wts_trades]()}")
+            cursor.commit()
+            connection.close()
+        except Exception as e:
+            self.batch_log_error(str(e))
+            logging.exception('Exception occurred on WTS 100 insert process')
 
-def delete_files(self):
-    """
-    Deletes files after completing the process
-    Args:
-        none
-    Returns:
-        none
-    Raises:
-        Exception on pulling files or deleting files
-    """
-    try:
-        files_path = os.path.join(os.getcwd(), '*WTS_Trade_Data*.txt')
-        logging.info('WTS 100 came to delete files method files path: ' + str(files_path))
-        files = sorted(glob.iglob(files_path), key=os.path.getctime, reverse=True)
-        logging.info('WTS 100 came to delete files method files: ' + str(files))
-    except Exception as e:
-        logging.info('Exception error is: ' + str(e))
-        logging.info('Exception occurred on pulling WTS 100 files for deletion')
-    try:
-        for f in files:
-            os.remove(f)
-        logging.info('Successfully deleted files')
-    except Exception as e:
-        logging.info('Exception error is: ' + str(e))
-        logging.info('Exception occurred on deleting files')
+    def delete_files(self):
+        """
+        Deletes files after completing the process
+        Args:
+            none
+        Returns:
+            none
+        Raises:
+            Exception on pulling files or deleting files
+        """
+        try:
+            files_path = os.path.join(os.getcwd(), '*WTS_Trade_Data*.txt')
+            logging.info('WTS 100 came to delete files method files path: ' + str(files_path))
+            files = sorted(glob.iglob(files_path), key=os.path.getctime, reverse=True)
+            logging.info('WTS 100 came to delete files method files: ' + str(files))
+        except Exception as e:
+            logging.info('Exception error is: ' + str(e))
+            logging.info('Exception occurred on pulling WTS 100 files for deletion')
+        try:
+            for f in files:
+                os.remove(f)
+            logging.info('Successfully deleted files')
+        except Exception as e:
+            logging.info('Exception error is: ' + str(e))
+            logging.info('Exception occurred on deleting files')
 
-def main(self):
-    self.delete_files()
-    wts_data = self.get_data()
-    self.insert_data(wts_data)
-    if self.error_status == False:
-        self.batch_log_success()
-    self.delete_files()
-    return
-            
+    def main(self):
+        self.delete_files()
+        wts_data = self.get_data()
+        self.insert_data(wts_data)
+        if self.error_status == False:
+            self.batch_log_success()
+        self.delete_files()
+        return
+        
